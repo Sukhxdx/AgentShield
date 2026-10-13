@@ -12,17 +12,19 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY backend backend
 COPY data/risk_scenarios.csv data/risk_scenarios.csv
 COPY results results
+COPY docker/start-api.sh /start-api.sh
 
-RUN chown -R appuser:appuser /app
+RUN chmod 755 /start-api.sh && chown -R appuser:appuser /app
 USER appuser
 
 ENV PYTHONPATH=/app \
     AUDIT_DB_PATH=/data/audit.db \
-    SANDBOX_DB_PATH=/data/sandbox.db
+    SANDBOX_DB_PATH=/data/sandbox.db \
+    PORT=8741
 
 EXPOSE 8741
 
 HEALTHCHECK --interval=15s --timeout=5s --retries=10 \
-    CMD python -c "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8741/health')"
+    CMD python -c "import os,urllib.request; urllib.request.urlopen('http://127.0.0.1:%s/health' % os.environ.get('PORT','8741'))"
 
-CMD ["gunicorn", "backend.main:app", "-k", "uvicorn.workers.UvicornWorker", "-w", "2", "-b", "0.0.0.0:8741", "--timeout", "120"]
+CMD ["/start-api.sh"]

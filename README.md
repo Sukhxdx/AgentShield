@@ -186,6 +186,12 @@ That stack sets `LLM_PROVIDER=mock`.
 
 Split deploy: put the `frontend` on Vercel with `API_UPSTREAM_URL` set to the VM API and `API_KEY` set as a server variable. Set `LLM_PROVIDER=mock` on the VM when it cannot host Ollama. Most free application platforms cannot run the model.
 
+### Render
+
+`render.yaml` defines two free web services, `agentshield-api` and `agentshield-web`. The API runs the mock agent (`LLM_PROVIDER=mock`). Render generates `API_KEY` and `DECISION_SECRET` on the first blueprint sync and copies the API key into the dashboard. The dashboard calls the API through its own `/backend-api` proxy.
+
+Connect the GitHub repo in the Render dashboard, choose Blueprint, and apply `render.yaml`. The free instances sleep when idle, and the SQLite audit file lives under `/tmp`, so the log resets when the API restarts. Ollama is not part of this deploy.
+
 ## Assumptions
 
 - Local and test runs default to the mock agent. Ollama is optional and selected with `LLM_PROVIDER=ollama`.
