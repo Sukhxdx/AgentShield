@@ -1,0 +1,75 @@
+{
+  "mae": 5.4664,
+  "rmse": 7.1855,
+  "r2": 0.9497,
+  "cv_mae_mean": 4.8212,
+  "cv_mae_std": 0.5796,
+  "cv_rmse_mean": 6.5859,
+  "n_train": 240,
+  "n_test": 60,
+  "n_samples": 300,
+  "random_state": 42,
+  "model": "RandomForestRegressor",
+  "feature_importances": [
+    {
+      "feature": "categories__action_impact_low",
+      "importance": 0.555473
+    },
+    {
+      "feature": "categories__scenario_type_safe",
+      "importance": 0.29376
+    },
+    {
+      "feature": "categories__attack_type_none",
+      "importance": 0.021908
+    },
+    {
+      "feature": "categories__attack_type_jailbreak",
+      "importance": 0.020788
+    },
+    {
+      "feature": "categories__tool_update_record",
+      "importance": 0.019005
+    },
+    {
+      "feature": "categories__scenario_type_legitimate_high_impact",
+      "importance": 0.017434
+    },
+    {
+      "feature": "categories__data_sensitivity_internal",
+      "importance": 0.016114
+    },
+    {
+      "feature": "categories__action_impact_medium",
+      "importance": 0.012148
+    },
+    {
+      "feature": "categories__data_sensitivity_confidential",
+      "importance": 0.007228
+    },
+    {
+      "feature": "categories__user_role_admin",
+      "importance": 0.005347
+    },
+    {
+      "feature": "categories__action_impact_high",
+      "importance": 0.005018
+    },
+    {
+      "feature": "numbers__external_recipient",
+      "importance": 0.003437
+    },
+    {
+      "feature": "categories__user_role_guest",
+      "importance": 0.003114
+    },
+    {
+      "feature": "categories__user_role_employee",
+      "importance": 0.002904
+    },
+    {
+      "feature": "categories__tool_send_email",
+      "importance": 0.002532
+    }
+  ]
+}

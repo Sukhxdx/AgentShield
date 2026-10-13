@@ -1,0 +1,92 @@
+# Pattern catalog for the prompt analyzer.
+# Injection weights accumulate into injection_score (capped at 100).
+# Sensitive weights accumulate into sensitive_info_score (capped at 100).
+# A pattern fires at most once per evaluation.
+#
+# scope: user | retrieved | arguments | any
+# normalize: optional "leet" pass before matching
+
+injection:
+  - id: ignore_previous
+    attack_type: direct_injection
+    scope: user
+    weight: 48
+    regex: '(?i)ignore\s+(all\s+|any\s+)?(previous|prior|above|earlier)\s+(instructions|prompts|rules|directions)'
+
+  - id: ignore_previous_retrieved
+    attack_type: indirect_injection
+    scope: retrieved
+    weight: 48
+    regex: '(?i)ignore\s+(all\s+|any\s+)?(previous|prior|above|earlier)\s+(instructions|prompts|rules|directions)'
+
+  - id: you_are_now
+    attack_type: jailbreak
+    scope: user
+    weight: 40
+    regex: '(?i)\byou\s+are\s+now\b|\bdo\s+anything\s+now\b|\bdeveloper\s+mode\b|\bDAN\s+mode\b'
+
+  - id: system_override
+    attack_type: direct_injection
+    scope: user
+    weight: 46
+    regex: '(?i)\b(system\s+override|reveal\s+your\s+system\s+prompt|show\s+me\s+your\s+(system\s+)?prompt)\b'
+
+  - id: delimiter_smuggle
+    attack_type: direct_injection
+    scope: any
+    weight: 36
+    regex: '(?i)(</?system>|###\s*(system|end system)|\[INST\]|<<SYS>>)'
+
+  - id: leet_ignore
+    attack_type: direct_injection
+    scope: user
+    weight: 42
+    normalize: leet
+    regex: '(?i)ignore\s+(all\s+)?previous\s+instructions'
+
+  - id: indirect_forward
+    attack_type: indirect_injection
+    scope: retrieved
+    weight: 62
+    regex: '(?i)when you read this[\s\S]{0,120}forward'
+
+  - id: exfiltrate_files
+    attack_type: data_exfiltration
+    scope: any
+    weight: 44
+    regex: '(?i)\b(exfiltrat\w+|dump\s+the\s+database|send\s+all\s+(the\s+)?(files|secrets|records)|forward\s+all\s+(confidential\s+)?files)\b'
+
+  - id: privilege_escalation
+    attack_type: privilege_escalation
+    scope: user
+    weight: 40
+    regex: '(?i)\b(act\s+as\s+(an?\s+)?admin|grant\s+me\s+admin|escalate\s+privileges?|ignore\s+the\s+role)\b'
+
+sensitive:
+  - id: email_address
+    weight: 30
+    regex: '(?i)\b[A-Z0-9._%+\-]+@[A-Z0-9.\-]+\.[A-Z]{2,}\b'
+
+  - id: phone_number
+    weight: 25
+    regex: '(?:\+?\d{1,3}[\s\-.]?)?(?:\(?\d{3}\)?[\s\-.]?)\d{3}[\s\-.]\d{4}\b'
+
+  - id: aadhaar
+    weight: 50
+    regex: '\b[2-9]\d{3}\s?\d{4}\s?\d{4}\b'
+
+  - id: pan
+    weight: 50
+    regex: '\b[A-Z]{5}[0-9]{4}[A-Z]\b'
+
+  - id: api_secret
+    weight: 45
+    regex: '(?i)\b(?:api[_-]?key|secret|token)\b\s*[:=]\s*\S+|sk-[A-Za-z0-9]{12,}'
+
+  - id: hr_employee_database
+    weight: 40
+    regex: '(?i)employee[_\s\-]*database'
+
+  - id: hr_payroll_salary
+    weight: 28
+    regex: '(?i)\b(payroll|salary|compensation|social\s+security|\bssn\b)\b'

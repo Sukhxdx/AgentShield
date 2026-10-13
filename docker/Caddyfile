@@ -1,0 +1,10 @@
+# Example reverse proxy for a single VM. Replace the hostnames.
+# Ollama stays on the docker network and is not listed here.
+
+shield.example.com {
+	reverse_proxy 127.0.0.1:8742
+}
+
+api.example.com {
+	reverse_proxy 127.0.0.1:8741
+}

@@ -1,0 +1,53 @@
+{
+  "toolkit": "AgentShieldSandbox",
+  "note": "Custom toolkit spec in the style of ToolEmu (Ruan et al., ICLR 2024). Upstream ToolEmu is not invoked unless TOOLEMU_ENABLED=1 and third_party/ToolEmu is present.",
+  "tools": [
+    {
+      "name": "read_file",
+      "summary": "Read a document from the simulated company sandbox.",
+      "parameters": [{"name": "path", "type": "string"}],
+      "returns": [{"name": "content", "type": "string"}]
+    },
+    {
+      "name": "search_documents",
+      "summary": "Search simulated documents.",
+      "parameters": [{"name": "query", "type": "string"}],
+      "returns": [{"name": "hits", "type": "array"}]
+    },
+    {
+      "name": "send_email",
+      "summary": "Send a simulated email.",
+      "parameters": [
+        {"name": "to", "type": "string"},
+        {"name": "subject", "type": "string"},
+        {"name": "body", "type": "string"}
+      ],
+      "returns": [{"name": "email_id", "type": "string"}]
+    },
+    {
+      "name": "update_record",
+      "summary": "Update a simulated employee record.",
+      "parameters": [
+        {"name": "record_id", "type": "string"},
+        {"name": "fields", "type": "object"}
+      ],
+      "returns": [{"name": "record", "type": "object"}]
+    },
+    {
+      "name": "delete_file",
+      "summary": "Delete a simulated file.",
+      "parameters": [{"name": "path", "type": "string"}],
+      "returns": [{"name": "deleted", "type": "boolean"}]
+    },
+    {
+      "name": "make_payment",
+      "summary": "Record a simulated payment. No money moves.",
+      "parameters": [
+        {"name": "payee", "type": "string"},
+        {"name": "amount", "type": "number"},
+        {"name": "currency", "type": "string"}
+      ],
+      "returns": [{"name": "transaction_id", "type": "string"}]
+    }
+  ]
+}

@@ -1,0 +1,40 @@
+@import "tailwindcss";
+
+:root {
+  --paper: #f3efe6;
+  --ink: #1c1915;
+  --panel: #fbf8f2;
+  --line: #e4dacb;
+  --copper: #8c3b16;
+  --approve: #176b45;
+  --hold: #8a5a00;
+  --block: #9f1239;
+  --muted: #6d645b;
+}
+
+@theme inline {
+  --font-sans: var(--font-source-sans);
+  --font-serif: var(--font-fraunces);
+  --color-paper: var(--paper);
+  --color-ink: var(--ink);
+  --color-panel: var(--panel);
+  --color-line: var(--line);
+  --color-copper: var(--copper);
+  --color-approve: var(--approve);
+  --color-hold: var(--hold);
+  --color-block: var(--block);
+  --color-muted: var(--muted);
+}
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-source-sans), "Source Sans 3", sans-serif;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}

@@ -1,0 +1,77 @@
+# Deterministic authorization policy.
+# A violation forces BLOCK. required_approval forces at least HUMAN_APPROVAL.
+# Policy never loosens a risk-threshold decision.
+
+internal_email_domains:
+  - company.example
+
+# External domains that an employee may mail only after a human approves.
+external_email_allow:
+  - partner.example
+
+allowed_currencies:
+  - USD
+  - EUR
+  - INR
+
+roles:
+  guest:
+    tools: [search_documents, read_file]
+    max_sensitivity:
+      search_documents: public
+      read_file: public
+    payment_limit: 0
+    allow_delete: false
+    delete_denied_sensitivities: [confidential, restricted]
+    external_email: deny
+  employee:
+    tools: [search_documents, read_file, send_email, update_record]
+    max_sensitivity:
+      search_documents: internal
+      read_file: internal
+      send_email: internal
+      update_record: internal
+    payment_limit: 0
+    allow_delete: false
+    delete_denied_sensitivities: [confidential, restricted]
+    external_email: approval
+  manager:
+    tools: [search_documents, read_file, send_email, update_record, make_payment]
+    max_sensitivity:
+      search_documents: confidential
+      read_file: confidential
+      send_email: confidential
+      update_record: internal
+      make_payment: confidential
+    payment_limit: 5000
+    allow_delete: false
+    delete_denied_sensitivities: [confidential, restricted]
+    external_email: approval
+  admin:
+    tools: [search_documents, read_file, send_email, update_record, delete_file, make_payment]
+    max_sensitivity:
+      search_documents: restricted
+      read_file: restricted
+      send_email: restricted
+      update_record: confidential
+      delete_file: internal
+      make_payment: confidential
+    payment_limit: 50000
+    allow_delete: true
+    delete_denied_sensitivities: [confidential, restricted]
+    external_email: approval
+  service:
+    tools: [search_documents, read_file]
+    max_sensitivity:
+      search_documents: internal
+      read_file: internal
+    payment_limit: 0
+    allow_delete: false
+    delete_denied_sensitivities: [confidential, restricted]
+    external_email: deny
+
+# Tools that stay in the human queue even when the numeric risk is low.
+approval_tools:
+  update_record: [employee, manager, admin]
+  delete_file: [admin]
+  make_payment: [employee, manager, admin, service, guest]

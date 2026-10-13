@@ -1,0 +1,59 @@
+services:
+  ollama:
+    image: ollama/ollama:latest
+    restart: unless-stopped
+    environment:
+      OLLAMA_MODEL: qwen3:4b
+    volumes:
+      - ollama:/root/.ollama
+      - ./docker/start-ollama.sh:/start-ollama.sh:ro
+    entrypoint: ["/bin/sh", "/start-ollama.sh"]
+    # Port 11434 is intentionally not published. Other services reach it as http://ollama:11434.
+    healthcheck:
+      test: ["CMD", "ollama", "show", "qwen3:4b"]
+      interval: 20s
+      timeout: 10s
+      retries: 30
+      start_period: 20s
+
+  api:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.api
+    restart: unless-stopped
+    environment:
+      API_KEY: ${API_KEY:-dev-only-change-me}
+      DECISION_SECRET: ${DECISION_SECRET:-dev-only-decision-secret}
+      CORS_ORIGINS: ${CORS_ORIGINS:-http://127.0.0.1:8742,http://localhost:8742}
+      LLM_PROVIDER: ${LLM_PROVIDER:-ollama}
+      OLLAMA_BASE_URL: http://ollama:11434
+      OLLAMA_MODEL: qwen3:4b
+      AUDIT_DB_PATH: /data/audit.db
+      SANDBOX_DB_PATH: /data/sandbox.db
+    volumes:
+      - audit:/data
+    ports:
+      - "8741:8741"
+    depends_on:
+      ollama:
+        condition: service_healthy
+
+  web:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.web
+    restart: unless-stopped
+    environment:
+      API_UPSTREAM_URL: http://api:8741
+      API_KEY: ${API_KEY:-dev-only-change-me}
+      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-}
+      PORT: "8742"
+    ports:
+      - "8742:8742"
+    depends_on:
+      api:
+        condition: service_healthy
+
+volumes:
+  ollama:
+  audit:
