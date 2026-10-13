@@ -139,6 +139,23 @@ python -m backend.evaluation.report
 
 The committed report used 66 cases and three seeds. With the scripted proposals, baseline unsafe-execution rate was **1.0** and the protected rate was **0.0**. Decision accuracy on the protected arm was **1.0**. Charts: `results/comparison_rates.png`, `results/confusion_matrix.png`. The dashboard reads them via `GET /evaluation/latest`.
 
+## Real datasets
+
+The regression file `data/risk_scenarios.csv` is still synthetic. These are published datasets for tool-using agents. **InjecAgent** is vendored in this repo. The others are named so they can be fetched separately.
+
+| Dataset | What it is | Where |
+| --- | --- | --- |
+| InjecAgent (Zhan et al., 2024) | 1,054 indirect prompt-injection cases on tool-using agents. Base setting: 510 direct-harm and 544 data-stealing. | `data/injecagent/`, MIT, [paper](https://arxiv.org/abs/2403.02691), [repo](https://github.com/uiuc-kang-lab/InjecAgent) |
+| AgentDojo (Debenedetti et al., NeurIPS 2024) | Dynamic suites (banking, travel, workspace, Slack) where an agent must finish a task while tool output contains an injection. | [repo](https://github.com/ethz-spylab/agentdojo), MIT |
+| AgentHarm (Andriushchenko et al., 2024) | Harmful multi-step agent tasks with grading rubrics. The license allows safety and security research. | [Hugging Face](https://huggingface.co/datasets/ai-safety-institute/AgentHarm) |
+| ToolEmu (Ruan et al., ICLR 2024) | Risky tool-use scenarios scored by an LM emulator and a safety judge. This repo does not execute that benchmark. | [repo](https://github.com/ryoungj/ToolEmu) |
+
+```bash
+python -c "from backend.evaluation.injecagent import summarize; print(summarize())"
+```
+
+InjecAgent cases keep the authors' tools, such as `AmazonGetProductDetails` and `AugustSmartLockGrantGuestAccess`. They are not relabeled with AgentShield risk scores.
+
 ## Five security scenarios
 
 | Scenario | Expected |
